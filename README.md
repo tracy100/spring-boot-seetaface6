@@ -2,7 +2,8 @@
 
 #### 介绍
 spring boot 人脸识别
-基于seetaface6SDK(https://gitee.com/crazy-of-pig/seeta-sdk-platform.git)项目打成的jar,配置人脸识别Bean做成spring boot项目。
+基于seetaface6SDK(https://gitee.com/crazy-of-pig/seeta-sdk-platform.git)
+将各种人脸识别器配置成spring bean 做成spring boot项目
 
 #### 演示真假人脸识别
 1.  spoof为攻击人脸，real为真人脸
