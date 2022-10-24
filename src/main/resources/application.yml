@@ -1,0 +1,36 @@
+server:
+  port: 8018
+  servlet:
+    context-path: /seetaface6
+  tomcat:
+    # tomcat的URI编码
+    uri-encoding: UTF-8
+    # 连接数满后的排队数，默认为100
+    accept-count: 100
+    threads:
+      # tomcat最大线程数，默认为200
+      max: 50
+      # Tomcat启动初始化的线程数，默认值10
+      min-spare: 20
+
+seetaface6:
+  #对象池配置
+  pool:
+  #模型配置
+  model:
+    base: E:\models #基础路径
+    face_recognizer: ${seetaface6.model.base}/face_recognizer.csta
+    face_recognizer_mask: ${seetaface6.model.base}/face_recognizer_mask.csta
+    face_recognizer_light: ${seetaface6.model.base}/face_recognizer_light.csta
+    age_predictor: ${seetaface6.model.base}/age_predictor.csta
+    face_landmarker_pts5: ${seetaface6.model.base}/face_landmarker_pts5.csta
+    face_landmarker_pts68: ${seetaface6.model.base}/face_landmarker_pts68.csta
+    pose_estimation: ${seetaface6.model.base}/pose_estimation.csta
+    eye_state: ${seetaface6.model.base}/eye_state.csta
+    face_detector: ${seetaface6.model.base}/face_detector.csta
+    face_landmarker_mask_pts5: ${seetaface6.model.base}/face_landmarker_mask_pts5.csta
+    mask_detector: ${seetaface6.model.base}/mask_detector.csta
+    gender_predictor: ${seetaface6.model.base}/gender_predictor.csta
+    quality_lbn: ${seetaface6.model.base}/quality_lbn.csta
+    fas_first: ${seetaface6.model.base}/fas_first.csta
+    fas_second: ${seetaface6.model.base}/fas_second.csta
