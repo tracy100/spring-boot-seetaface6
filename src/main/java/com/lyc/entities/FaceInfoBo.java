@@ -1,7 +1,8 @@
-package com.lyc.pojo;
+package com.lyc.entities;
 
-public class FaceModelScore extends FaceModel{
+public class FaceInfoBo extends FaceInfo {
 
+    // 分数
     private Float score;
 
     public Float getScore() {

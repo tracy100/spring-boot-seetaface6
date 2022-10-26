@@ -1,5 +1,9 @@
 package com.lyc.service.impl;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
+import com.lyc.entities.FaceInfo;
 import com.lyc.service.Seetaface6Service;
 import com.seeta.proxy.*;
 import com.seeta.sdk.FaceAntiSpoofing;
@@ -7,13 +11,17 @@ import com.seeta.sdk.SeetaImageData;
 import com.seeta.sdk.SeetaPointF;
 import com.seeta.sdk.SeetaRect;
 import com.seeta.sdk.util.SeetafaceUtil;
+import org.apache.commons.math3.linear.ArrayRealVector;
+import org.apache.commons.math3.linear.RealVector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -181,8 +189,90 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
         }
         float calculateSimilarity = 0.00F;
         if (features1 != null && features2 != null) {
+
+            RealVector realVector = new ArrayRealVector();
             calculateSimilarity = faceRecognizer.cosineSimilarity(features1, features2);
         }
         return calculateSimilarity;
     }
+
+    @Override
+    public float[] getOneFaceFeature(MultipartFile face) {
+        float[] features = null;
+        try {
+            SeetaImageData image = SeetafaceUtil.toSeetaImageData(ImageIO.read(face.getInputStream()));
+            SeetaRect[] detects = faceDetector.detect(image);
+            if (detects != null && detects.length > 0) {
+                SeetaPointF[] pointFS = faceLandmarker5.mark(image, detects[0]);
+                features = faceRecognizer.extract(image, pointFS);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return features;
+    }
+
+    @Override
+    public List<FaceInfo> getFaceInfo(MultipartFile face, String path) throws Exception {
+
+        return getFaceInfo(face.getInputStream(), face.getOriginalFilename(), path);
+    }
+
+    @Override
+    public List<FaceInfo> getFaceInfo(File face) throws Exception {
+
+        return getFaceInfo(FileUtil.getInputStream(face), face.getName(), face.getAbsolutePath());
+    }
+
+    public List<FaceInfo> getFaceInfo(InputStream face, String name, String path) throws Exception {
+
+        List<FaceInfo> list = null;
+        SeetaImageData image = SeetafaceUtil.toSeetaImageData(ImageIO.read(face));
+        SeetaRect[] detects = faceDetector.detect(image);
+        if (detects != null && detects.length > 0) {
+            list = new ArrayList<>();
+
+            for (SeetaRect seetaRect : detects) {
+                FaceInfo faceInfo = new FaceInfo();
+
+                SeetaPointF[] pointFs = faceLandmarker5.mark(image, seetaRect);
+                float[] features = faceRecognizer.extract(image, pointFs);
+
+                // 创建时间
+                DateTime date = DateUtil.date();
+                faceInfo.setCreateTime(date);
+                faceInfo.setUpdateTime(date);
+
+                // 人脸向量
+                faceInfo.setFeatures(features);
+
+                // 文件名
+                faceInfo.setFileName(name);
+
+                // 文件路径
+                faceInfo.setFilePath(path);
+
+                // 人脸在原图片中的坐标和高宽
+                faceInfo.setX(seetaRect.x);
+                faceInfo.setY(seetaRect.y);
+                faceInfo.setHeight(seetaRect.height);
+                faceInfo.setWidth(seetaRect.width);
+
+                // 人脸关键点 5点
+                double[][] ponitArr = new double[5][2];
+                for (int i = 0; i < pointFs.length; i++) {
+                    SeetaPointF pointF = pointFs[i];
+                    double[] ponit = new double[2];
+                    ponit[0] = pointF.x;
+                    ponit[1] = pointF.y;
+                    ponitArr[i] = ponit;
+                }
+                faceInfo.setPoints(ponitArr);
+                list.add(faceInfo);
+            }
+
+        }
+        return list;
+    }
+
 }

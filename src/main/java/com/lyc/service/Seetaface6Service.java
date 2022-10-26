@@ -1,10 +1,14 @@
 package com.lyc.service;
 
+import com.lyc.entities.FaceInfo;
 import com.seeta.proxy.GenderPredictorProxy;
 import com.seeta.proxy.MaskDetectorProxy;
 import com.seeta.sdk.FaceAntiSpoofing;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public interface Seetaface6Service {
@@ -49,4 +53,10 @@ public interface Seetaface6Service {
      * @return Float 分数 0~1
      */
     Float faceRecognizer(MultipartFile face1, MultipartFile face2);
+
+    float[] getOneFaceFeature(MultipartFile faceImage);
+
+    List<FaceInfo> getFaceInfo(MultipartFile face, String path) throws Exception;
+
+    List<FaceInfo> getFaceInfo(File face) throws Exception;
 }

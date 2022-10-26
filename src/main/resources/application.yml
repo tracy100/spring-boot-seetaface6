@@ -7,27 +7,33 @@ server:
     uri-encoding: UTF-8
     # 连接数满后的排队数，默认为100
     accept-count: 100
-    threads:
-      # tomcat最大线程数，默认为200
-      max: 50
-      # Tomcat启动初始化的线程数，默认值10
-      min-spare: 20
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+  datasource:
+    url: jdbc:postgresql://192.168.112.129:5432/seetaface
+    username: pgvector
+    password: pgvector
+    driver-class-name: org.postgresql.Driver
+
+mybatis-plus:
+  mapper-locations: classpath*:com/lyc/mapper/xml/*Mapper.xml
+  type-aliases-package: com.lyc.entities
+  # 类型转换器包路径，向量和二维数组转换
+  type-handlers-package: com.lyc.typeHandler
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 seetaface6:
-  # 注册人脸信息配置
-  registration:
-    method: file # file: 文件，本地文件，可以永久保存，重启不会消失。
-    # method: cache  缓存，内存 重启后会消失。
-    # method: mysql 存mysql,后续再开发。。
-    file_path: ./faceModels.json # 为file模式时可以指定，默认为 ./faceModels.json
-    max_face: 50 # 能够注册的最大人脸数
-    topN: 10 #查询前面多少
-    score: 0.68 #查询的最小分数
-  #对象池配置，没有做配置，用了默认（最大8个对象）
+  # 对象池，这里没有做配置，用的common-pool默认的配置
   pool:
   #模型配置
   model:
-    base: E:\models #基础路径
+    base: D:\face\models #基础路径
     face_recognizer: ${seetaface6.model.base}/face_recognizer.csta
     face_recognizer_mask: ${seetaface6.model.base}/face_recognizer_mask.csta
     face_recognizer_light: ${seetaface6.model.base}/face_recognizer_light.csta
@@ -43,3 +49,9 @@ seetaface6:
     quality_lbn: ${seetaface6.model.base}/quality_lbn.csta
     fas_first: ${seetaface6.model.base}/fas_first.csta
     fas_second: ${seetaface6.model.base}/fas_second.csta
+
+# 文件管理工具
+ufop:
+  storage-type: 0
+  # 上传的图片保存路径
+  local-storage-path: ./upload/images

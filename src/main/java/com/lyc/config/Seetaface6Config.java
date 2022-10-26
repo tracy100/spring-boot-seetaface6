@@ -1,6 +1,5 @@
 package com.lyc.config;
 
-
 import com.lyc.contant.ModelPath;
 import com.seeta.pool.SeetaConfSetting;
 import com.seeta.proxy.*;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 /**
@@ -21,11 +21,11 @@ import java.util.Arrays;
 @Configuration
 public class Seetaface6Config {
 
-    /**
-     * 加载dll
+    /*
+      加载dll
      */
     static {
-        LoadNativeCore.LOAD_NATIVE(SeetaDevice.SEETA_DEVICE_AUTO);
+        LoadNativeCore.LOAD_NATIVE(SeetaDevice.SEETA_DEVICE_GPU);
     }
 
     private static Logger logger = LoggerFactory.getLogger(Seetaface6Config.class);
@@ -39,7 +39,7 @@ public class Seetaface6Config {
      * @return FaceDetectorProxy
      */
     @Bean
-    public FaceDetectorProxy faceDetector() {
+    public FaceDetectorProxy faceDetector() throws FileNotFoundException {
         if (logger.isDebugEnabled()) {
             logger.debug("人脸识别检测器，模型文件路径： {}", Arrays.toString(modelPath.getFace_detector()));
         }
@@ -57,7 +57,7 @@ public class Seetaface6Config {
      * @return
      */
     @Bean
-    public FaceLandmarkerProxy faceLandmarker5() {
+    public FaceLandmarkerProxy faceLandmarker5() throws FileNotFoundException {
         if (logger.isDebugEnabled()) {
             logger.debug("人脸关键点定位器，模型文件路径： {}", Arrays.toString(modelPath.getFace_landmarker_pts5()));
         }
@@ -75,7 +75,7 @@ public class Seetaface6Config {
      * @return
      */
     @Bean
-    public FaceRecognizerProxy faceRecognizer() {
+    public FaceRecognizerProxy faceRecognizer() throws FileNotFoundException {
         if (logger.isDebugEnabled()) {
             logger.debug("人脸特征提取人脸比对器，模型文件路径： {}", Arrays.toString(modelPath.getFace_recognizer()));
         }
@@ -93,7 +93,7 @@ public class Seetaface6Config {
      * @return
      */
     @Bean
-    public GenderPredictorProxy genderPredictor() {
+    public GenderPredictorProxy genderPredictor() throws FileNotFoundException {
         if (logger.isDebugEnabled()) {
             logger.debug("性别识别器，模型文件路径： {}", Arrays.toString(modelPath.getGender_predictor()));
         }
@@ -112,7 +112,7 @@ public class Seetaface6Config {
      * @return
      */
     @Bean
-    public AgePredictorProxy agePredictor() {
+    public AgePredictorProxy agePredictor() throws FileNotFoundException {
         if (logger.isDebugEnabled()) {
             logger.debug("人脸年龄检测器，模型文件路径： {}", Arrays.toString(modelPath.getAge_predictor()));
         }
@@ -130,7 +130,7 @@ public class Seetaface6Config {
      * @return
      */
     @Bean
-    public MaskDetectorProxy maskDetector() {
+    public MaskDetectorProxy maskDetector() throws FileNotFoundException {
         if (logger.isDebugEnabled()) {
             logger.debug("人脸戴口罩检测器，模型文件路径： {}", Arrays.toString(modelPath.getMask_detector()));
         }
@@ -149,7 +149,7 @@ public class Seetaface6Config {
      * @return
      */
     @Bean
-    public FaceAntiSpoofingProxy faceAntiSpoofing() {
+    public FaceAntiSpoofingProxy faceAntiSpoofing() throws FileNotFoundException {
         if (logger.isDebugEnabled()) {
             logger.debug("攻击人脸检测器，模型文件路径：模型一 {} ，模型二 {}", modelPath.getFas_first(), modelPath.getFas_second());
         }

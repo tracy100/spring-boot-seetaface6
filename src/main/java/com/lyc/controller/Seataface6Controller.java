@@ -6,7 +6,6 @@ import com.seeta.proxy.MaskDetectorProxy;
 import com.seeta.sdk.FaceAntiSpoofing;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Api(value = "seetaface6人脸识别API", protocols = "http")
@@ -21,9 +21,8 @@ import java.util.List;
 @RequestMapping(value = "/seetaface6")
 public class Seataface6Controller {
 
-    @Autowired
+    @Resource
     Seetaface6Service seetaface6Service;
-
 
     @ApiOperation(value = "攻击人脸检测", notes = "攻击人脸检测")
     @PostMapping("/faceAntiSpoofing")
@@ -59,7 +58,7 @@ public class Seataface6Controller {
         return ResponseEntity.ok(ages);
     }
 
-    @ApiOperation(value = "识别人脸照片年龄", notes = "识别人脸照片年龄")
+    @ApiOperation(value = "人脸相似度1:1", notes = "人脸相似度1:1")
     @PostMapping("/faceRecognizer")
     public ResponseEntity<Float> faceRecognizer(MultipartFile face1, MultipartFile face2) {
         Assert.notNull(face1, "上传人脸照片1不能为空");
