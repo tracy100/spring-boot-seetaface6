@@ -1,6 +1,7 @@
 package com.lyc.config;
 
 
+import com.lyc.contant.ModelPath;
 import com.seeta.pool.SeetaConfSetting;
 import com.seeta.proxy.*;
 import com.seeta.sdk.SeetaDevice;

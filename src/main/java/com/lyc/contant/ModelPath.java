@@ -1,4 +1,4 @@
-package com.lyc.config;
+package com.lyc.contant;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

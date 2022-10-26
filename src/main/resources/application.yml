@@ -14,7 +14,16 @@ server:
       min-spare: 20
 
 seetaface6:
-  #对象池配置
+  # 注册人脸信息配置
+  registration:
+    method: file # file: 文件，本地文件，可以永久保存，重启不会消失。
+    # method: cache  缓存，内存 重启后会消失。
+    # method: mysql 存mysql,后续再开发。。
+    file_path: ./faceModels.json # 为file模式时可以指定，默认为 ./faceModels.json
+    max_face: 50 # 能够注册的最大人脸数
+    topN: 10 #查询前面多少
+    score: 0.68 #查询的最小分数
+  #对象池配置，没有做配置，用了默认（最大8个对象）
   pool:
   #模型配置
   model:
