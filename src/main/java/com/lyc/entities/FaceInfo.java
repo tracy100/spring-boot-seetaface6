@@ -113,8 +113,6 @@ public class FaceInfo implements Serializable {
         this.height = height;
     }
 
-
-
     public Date getCreateTime() {
         return createTime;
     }
