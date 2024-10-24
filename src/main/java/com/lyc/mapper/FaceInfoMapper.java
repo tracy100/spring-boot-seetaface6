@@ -29,7 +29,7 @@ public interface FaceInfoMapper extends BaseMapper<FaceInfo> {
      * @param topN 返回最接近的前N个
      * @return list
      */
-    @Select("SELECT *, ((1 - (features <=> #{targetFeatures})) + 1)/2 as score FROM public.seeta_face_info " +
+    @Select("SELECT *, (1 - (features <=> #{targetFeatures})) as score FROM public.seeta_face_info " +
             "ORDER BY features <=> #{targetFeatures} " +
             "LIMIT ${topN}")
     List<FaceInfoBo> queryByFeatures(@Param("targetFeatures") float[] targetFeatures, @Param("topN") int topN);
