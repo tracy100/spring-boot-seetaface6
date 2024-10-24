@@ -21,8 +21,6 @@ public class FaceInfo implements Serializable {
     // 文件路径
     private String filePath;
 
-
-
     // 人脸向量特征
     @TableField(typeHandler = VectorTypeHandler.class)
     private float[] features;

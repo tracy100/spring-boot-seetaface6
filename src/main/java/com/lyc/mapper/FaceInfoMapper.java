@@ -30,24 +30,9 @@ public interface FaceInfoMapper extends BaseMapper<FaceInfo> {
      * @return list
      */
     @Select("SELECT *, (1 - (features <=> #{targetFeatures})) as score FROM public.seeta_face_info " +
-            "ORDER BY features <=> #{targetFeatures} " +
+            " ORDER BY features <=> #{targetFeatures} " +
             "LIMIT ${topN}")
     List<FaceInfoBo> queryByFeatures(@Param("targetFeatures") float[] targetFeatures, @Param("topN") int topN);
 
-    /*
-    将余弦相似度转换为 0 到 1 之间的分数，使得接近 0 表示不相似，接近 1 表示相似，可以通过简单的数学变换来实现。余弦相似度的范围是 [-1, 1]，其中：
 
-    1 表示两个向量完全相同（夹角为 0 度）。
-    0 表示两个向量正交（夹角为 90 度）。
-    -1 表示两个向量完全相反（夹角为 180 度）。
-    为了将余弦相似度转换为 0 到 1 之间的分数，可以使用以下公式：
-
-    similarity_score = (cosine_similarity + 1) / 2
-
-    这样，余弦相似度的值会被线性映射到 0 到 1 之间，其中：
-
-    当余弦相似度为 1 时，similarity_score 为 1。
-    当余弦相似度为 0 时，similarity_score 为 0.5。
-    当余弦相似度为 -1 时，similarity_score 为 0。
-     */
 }

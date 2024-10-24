@@ -186,8 +186,8 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
         }
         float calculateSimilarity = 0.00F;
         if (features1 != null && features2 != null) {
-             calculateSimilarity = VectorUtils.cosineSimilarity(features1, features2);
-           // calculateSimilarity = faceRecognizer.cosineSimilarity(features1, features2);
+            // calculateSimilarity = VectorUtils.cosineSimilarity(features1, features2);
+           calculateSimilarity = faceRecognizer.cosineSimilarity(features1, features2);
         }
         return calculateSimilarity;
     }
