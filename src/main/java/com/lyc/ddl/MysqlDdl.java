@@ -44,6 +44,8 @@ public class MysqlDdl implements IDdl {
 
         logger.info("获取要执行的SQL脚本文件列表");
         List<String> list = Lists.newArrayList();
+        // 拓展vector 插件
+        list.add("db/extension_vector.sql");
         // 建表语句和测试数据
         list.add("db/seeta_face_info.sql");
         // 创建向量索引
