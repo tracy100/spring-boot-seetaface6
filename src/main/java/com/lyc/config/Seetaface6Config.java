@@ -25,7 +25,7 @@ public class Seetaface6Config {
       加载dll
      */
     static {
-        LoadNativeCore.LOAD_NATIVE(SeetaDevice.SEETA_DEVICE_GPU);
+        LoadNativeCore.LOAD_NATIVE(SeetaDevice.SEETA_DEVICE_CPU);
     }
 
     private static Logger logger = LoggerFactory.getLogger(Seetaface6Config.class);
