@@ -1,5 +1,6 @@
 package com.lyc.controller;
 
+import com.lyc.exception.Seetaface6Exception;
 import com.lyc.service.Seetaface6Service;
 import com.seeta.proxy.GenderPredictorProxy;
 import com.seeta.proxy.MaskDetectorProxy;
@@ -26,7 +27,7 @@ public class Seataface6Controller {
 
     @ApiOperation(value = "攻击人脸检测", notes = "攻击人脸检测")
     @PostMapping("/faceAntiSpoofing")
-    public ResponseEntity<List<FaceAntiSpoofing.Status>> faceAntiSpoofing(MultipartFile faceImage) {
+    public ResponseEntity<List<FaceAntiSpoofing.Status>> faceAntiSpoofing(MultipartFile faceImage) throws Seetaface6Exception {
 
         Assert.notNull(faceImage, "上传人脸照片不能为空");
         List<FaceAntiSpoofing.Status> statuses = seetaface6Service.faceAntiSpoofing(faceImage);
@@ -35,7 +36,7 @@ public class Seataface6Controller {
 
     @ApiOperation(value = "识别人脸是否戴口罩", notes = "识别人脸是否戴口罩")
     @PostMapping("/maskDetector")
-    public ResponseEntity<List<MaskDetectorProxy.MaskItem>> maskDetector(MultipartFile faceImage) {
+    public ResponseEntity<List<MaskDetectorProxy.MaskItem>> maskDetector(MultipartFile faceImage) throws Seetaface6Exception {
         Assert.notNull(faceImage, "上传人脸照片不能为空");
         List<MaskDetectorProxy.MaskItem> list = seetaface6Service.maskDetector(faceImage);
 
@@ -44,7 +45,7 @@ public class Seataface6Controller {
 
     @ApiOperation(value = "识别人脸照片性别", notes = "识别人脸照片性别")
     @PostMapping("/genderPredictor")
-    public ResponseEntity<List<GenderPredictorProxy.GenderItem>> genderPredictor(MultipartFile faceImage) {
+    public ResponseEntity<List<GenderPredictorProxy.GenderItem>> genderPredictor(MultipartFile faceImage) throws Seetaface6Exception {
         Assert.notNull(faceImage, "上传人脸照片不能为空");
         List<GenderPredictorProxy.GenderItem> list = seetaface6Service.genderPredictor(faceImage);
         return ResponseEntity.ok(list);
@@ -52,7 +53,7 @@ public class Seataface6Controller {
 
     @ApiOperation(value = "识别人脸照片年龄", notes = "识别人脸照片年龄")
     @PostMapping("/agePredictor")
-    public ResponseEntity<List<Integer>> agePredictor(MultipartFile faceImage) {
+    public ResponseEntity<List<Integer>> agePredictor(MultipartFile faceImage) throws Seetaface6Exception {
         Assert.notNull(faceImage, "上传人脸照片不能为空");
         List<Integer> ages = seetaface6Service.agePredictor(faceImage);
         return ResponseEntity.ok(ages);
@@ -60,7 +61,7 @@ public class Seataface6Controller {
 
     @ApiOperation(value = "人脸相似度1:1", notes = "人脸相似度1:1")
     @PostMapping("/faceRecognizer")
-    public ResponseEntity<Float> faceRecognizer(MultipartFile face1, MultipartFile face2) {
+    public ResponseEntity<Float> faceRecognizer(MultipartFile face1, MultipartFile face2) throws Seetaface6Exception {
         Assert.notNull(face1, "上传人脸照片1不能为空");
         Assert.notNull(face2, "上传人脸照片2不能为空");
         Float calculateSimilarity = seetaface6Service.faceRecognizer(face1, face2);

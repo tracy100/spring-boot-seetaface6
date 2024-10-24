@@ -1,5 +1,8 @@
 package com.lyc.utils;
 
+/**
+ * 向量归一化处理，还有待测试
+ */
 public class VectorUtils {
 
     /**

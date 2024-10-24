@@ -2,6 +2,7 @@ package com.lyc.service;
 
 import com.lyc.entities.FaceInfo;
 import com.lyc.entities.FaceInfoBo;
+import com.lyc.exception.Seetaface6Exception;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,5 +21,5 @@ public interface FaceInfoService {
 
    List<FaceInfo> getAll();
 
-   List<FaceInfoBo> queryTopN(MultipartFile face, int topN);
+   List<FaceInfoBo> queryTopN(MultipartFile face, int topN) throws Seetaface6Exception;
 }

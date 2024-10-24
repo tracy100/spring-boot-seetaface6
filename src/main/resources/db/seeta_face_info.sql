@@ -3,7 +3,7 @@
 -- ----------------------------
 
 CREATE TABLE IF NOT EXISTS public.seeta_face_info (
-    id int4 NOT NULL DEFAULT nextval('seeta_face_info_id_seq'::regclass),
+    id SERIAL PRIMARY KEY,
     features vector(1024), -- 显式指定向量的维度
     file_name varchar(127),
     file_path varchar(256),
@@ -15,11 +15,6 @@ CREATE TABLE IF NOT EXISTS public.seeta_face_info (
     update_time date,
     points float8[][]
 );
-
--- ----------------------------
--- Primary Key structure for table seeta_face_info
--- ----------------------------
-ALTER TABLE "public"."seeta_face_info" ADD CONSTRAINT "seeta_face_info1_pkey" PRIMARY KEY ("id");
 
 COMMENT ON COLUMN "public"."seeta_face_info"."id" IS '自增ID';
 COMMENT ON COLUMN "public"."seeta_face_info"."features" IS '人脸向量';

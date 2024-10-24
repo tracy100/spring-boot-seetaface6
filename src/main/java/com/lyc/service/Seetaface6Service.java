@@ -1,6 +1,7 @@
 package com.lyc.service;
 
 import com.lyc.entities.FaceInfo;
+import com.lyc.exception.Seetaface6Exception;
 import com.seeta.proxy.GenderPredictorProxy;
 import com.seeta.proxy.MaskDetectorProxy;
 import com.seeta.sdk.FaceAntiSpoofing;
@@ -19,7 +20,7 @@ public interface Seetaface6Service {
      * @param faceImage
      * @return List<FaceAntiSpoofing.Status>
      */
-    List<FaceAntiSpoofing.Status> faceAntiSpoofing(MultipartFile faceImage);
+    List<FaceAntiSpoofing.Status> faceAntiSpoofing(MultipartFile faceImage) throws Seetaface6Exception;
 
     /**
      * 带口罩人脸检测
@@ -27,7 +28,7 @@ public interface Seetaface6Service {
      * @param faceImage
      * @return 人是否带口罩
      */
-    List<MaskDetectorProxy.MaskItem> maskDetector(MultipartFile faceImage);
+    List<MaskDetectorProxy.MaskItem> maskDetector(MultipartFile faceImage) throws Seetaface6Exception;
 
     /**
      * 人脸性别判断
@@ -35,7 +36,7 @@ public interface Seetaface6Service {
      * @param faceImage
      * @return List<GenderPredictorProxy.GenderItem> 多个人脸的性别
      */
-    List<GenderPredictorProxy.GenderItem> genderPredictor(MultipartFile faceImage);
+    List<GenderPredictorProxy.GenderItem> genderPredictor(MultipartFile faceImage) throws Seetaface6Exception;
 
     /**
      * 人脸年龄判断
@@ -43,7 +44,7 @@ public interface Seetaface6Service {
      * @param faceImage
      * @return List<Integer> 多个人脸的年龄
      */
-    List<Integer> agePredictor(MultipartFile faceImage);
+    List<Integer> agePredictor(MultipartFile faceImage) throws Seetaface6Exception;
 
     /**
      * 人脸对比，1：1
@@ -52,9 +53,9 @@ public interface Seetaface6Service {
      * @param face2
      * @return Float 分数 0~1
      */
-    Float faceRecognizer(MultipartFile face1, MultipartFile face2);
+    Float faceRecognizer(MultipartFile face1, MultipartFile face2) throws Seetaface6Exception;
 
-    float[] getOneFaceFeature(MultipartFile faceImage);
+    float[] faceRecognizer(MultipartFile faceImage) throws Seetaface6Exception;
 
     List<FaceInfo> getFaceInfo(MultipartFile face, String path) throws Exception;
 

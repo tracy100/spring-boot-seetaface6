@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
 import com.lyc.entities.FaceInfo;
+import com.lyc.exception.Seetaface6Exception;
 import com.lyc.service.Seetaface6Service;
 import com.seeta.proxy.*;
 import com.seeta.sdk.FaceAntiSpoofing;
@@ -11,16 +12,15 @@ import com.seeta.sdk.SeetaImageData;
 import com.seeta.sdk.SeetaPointF;
 import com.seeta.sdk.SeetaRect;
 import com.seeta.sdk.util.SeetafaceUtil;
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.linear.RealVector;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,35 +32,37 @@ import java.util.List;
 @Service
 public class Seetaface6ServiceImpl implements Seetaface6Service {
 
-    @Autowired
+    Logger logger = LoggerFactory.getLogger(Seetaface6ServiceImpl.class);
+
+    @Resource
     FaceDetectorProxy faceDetector;
 
-    @Autowired
+    @Resource
     FaceLandmarkerProxy faceLandmarker5;
 
-    @Autowired
+    @Resource
     FaceRecognizerProxy faceRecognizer;
 
-    @Autowired
+    @Resource
     AgePredictorProxy agePredictor;
 
-    @Autowired
+    @Resource
     GenderPredictorProxy genderPredictor;
 
-    @Autowired
+    @Resource
     MaskDetectorProxy maskDetector;
 
-    @Autowired
+    @Resource
     FaceAntiSpoofingProxy faceAntiSpoofing;
 
     /**
      * 攻击人脸检测
      *
-     * @param faceImage
+     * @param faceImage 人脸图片
      * @return List<FaceAntiSpoofing.Status>
      */
     @Override
-    public List<FaceAntiSpoofing.Status> faceAntiSpoofing(MultipartFile faceImage) {
+    public List<FaceAntiSpoofing.Status> faceAntiSpoofing(MultipartFile faceImage) throws Seetaface6Exception {
         List<FaceAntiSpoofing.Status> list = new ArrayList<>();
         try {
             SeetaImageData image = SeetafaceUtil.toSeetaImageData(ImageIO.read(faceImage.getInputStream()));
@@ -71,8 +73,8 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
                 list.add(predict);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            logger.error("攻击人脸检测报错", e);
+            throw new Seetaface6Exception(e);
         }
         return list;
     }
@@ -80,11 +82,11 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
     /**
      * 带口罩人脸检测
      *
-     * @param faceImage
+     * @param faceImage 人脸图片
      * @return 人是否带口罩
      */
     @Override
-    public List<MaskDetectorProxy.MaskItem> maskDetector(MultipartFile faceImage) {
+    public List<MaskDetectorProxy.MaskItem> maskDetector(MultipartFile faceImage) throws Seetaface6Exception {
         List<MaskDetectorProxy.MaskItem> list = new ArrayList<>();
         try {
             SeetaImageData image = SeetafaceUtil.toSeetaImageData(ImageIO.read(faceImage.getInputStream()));
@@ -94,8 +96,8 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
                 list.add(detect);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            logger.error("带口罩人脸检测报错", e);
+            throw new Seetaface6Exception(e);
         }
         return list;
     }
@@ -103,11 +105,11 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
     /**
      * 人脸性别判断
      *
-     * @param faceImage
+     * @param faceImage 人脸图片
      * @return List<GenderPredictorProxy.GenderItem> 多个人脸的性别
      */
     @Override
-    public List<GenderPredictorProxy.GenderItem> genderPredictor(MultipartFile faceImage) {
+    public List<GenderPredictorProxy.GenderItem> genderPredictor(MultipartFile faceImage) throws Seetaface6Exception {
         List<GenderPredictorProxy.GenderItem> list = new ArrayList<>();
         try {
             SeetaImageData image = SeetafaceUtil.toSeetaImageData(ImageIO.read(faceImage.getInputStream()));
@@ -117,12 +119,9 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
                 SeetaPointF[] pointFS = faceLandmarker5.mark(image, seetaRect);
                 list.add(genderPredictor.predictGenderWithCrop(image, pointFS));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            logger.error("人脸性别判断检测报错", e);
+            throw new Seetaface6Exception(e);
         }
         return list;
     }
@@ -130,11 +129,11 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
     /**
      * 人脸年龄判断
      *
-     * @param faceImage
+     * @param faceImage 人脸图片
      * @return List<Integer> 多个人脸的年龄
      */
     @Override
-    public List<Integer> agePredictor(MultipartFile faceImage) {
+    public List<Integer> agePredictor(MultipartFile faceImage) throws Seetaface6Exception {
         List<Integer> ageArray = new ArrayList<>();
         try {
             BufferedImage srcImage = ImageIO.read(faceImage.getInputStream());
@@ -149,12 +148,9 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
                 ageArray.add(age);
 
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            logger.error("人脸年龄判断报错", e);
+            throw new Seetaface6Exception(e);
         }
         return ageArray;
     }
@@ -162,12 +158,12 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
     /**
      * 人脸对比，1：1
      *
-     * @param face1
-     * @param face2
+     * @param face1 人脸1
+     * @param face2 人脸2
      * @return Float 分数 0~1
      */
     @Override
-    public Float faceRecognizer(MultipartFile face1, MultipartFile face2) {
+    public Float faceRecognizer(MultipartFile face1, MultipartFile face2) throws Seetaface6Exception {
         float[] features1 = null;
         float[] features2 = null;
         try {
@@ -184,20 +180,18 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
                 features2 = faceRecognizer.extract(image2, pointFS);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            logger.error("人脸对比，1：1报错", e);
+            throw new Seetaface6Exception(e);
         }
         float calculateSimilarity = 0.00F;
         if (features1 != null && features2 != null) {
-
-            RealVector realVector = new ArrayRealVector();
             calculateSimilarity = faceRecognizer.cosineSimilarity(features1, features2);
         }
         return calculateSimilarity;
     }
 
     @Override
-    public float[] getOneFaceFeature(MultipartFile face) {
+    public float[] faceRecognizer(MultipartFile face) throws Seetaface6Exception {
         float[] features = null;
         try {
             SeetaImageData image = SeetafaceUtil.toSeetaImageData(ImageIO.read(face.getInputStream()));
@@ -207,7 +201,7 @@ public class Seetaface6ServiceImpl implements Seetaface6Service {
                 features = faceRecognizer.extract(image, pointFS);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new Seetaface6Exception(e);
         }
         return features;
     }

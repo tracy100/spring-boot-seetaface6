@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.lyc.entities.FaceInfo;
 import com.lyc.entities.FaceInfoBo;
+import com.lyc.exception.Seetaface6Exception;
 import com.lyc.mapper.FaceInfoMapper;
 import com.lyc.service.FaceInfoService;
 import com.lyc.service.FileManageService;
@@ -98,15 +99,12 @@ public class FaceInfoServiceImpl implements FaceInfoService {
     }
 
     @Override
-    public List<FaceInfoBo> queryTopN(MultipartFile face, int topN) {
+    public List<FaceInfoBo> queryTopN(MultipartFile face, int topN) throws Seetaface6Exception {
 
-        float[] oneFaceFeature = seetaface6Service.getOneFaceFeature(face);
+        float[] oneFaceFeature = seetaface6Service.faceRecognizer(face);
 
         if (oneFaceFeature != null && oneFaceFeature.length > 0) {
-            FaceInfo faceInfo = new FaceInfo();
-            faceInfo.setFeatures(oneFaceFeature);
-
-            // 设置参数，session 范围内有效
+            // 设置参数，session范围内有效
             faceInfoMapper.setEfSearch();
             // 执行向量查询
             List<FaceInfoBo> list = faceInfoMapper.queryByFeatures(oneFaceFeature, topN);

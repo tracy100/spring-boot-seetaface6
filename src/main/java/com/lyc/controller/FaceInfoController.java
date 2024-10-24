@@ -2,6 +2,7 @@ package com.lyc.controller;
 
 import com.lyc.entities.FaceInfo;
 import com.lyc.entities.FaceInfoBo;
+import com.lyc.exception.Seetaface6Exception;
 import com.lyc.service.FaceInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -58,7 +59,7 @@ public class FaceInfoController {
 
     @ApiOperation(value = "查询前N个·", notes = "查询前N个")
     @PostMapping("/queryTopN")
-    public ResponseEntity<List<FaceInfoBo>> queryTopN(MultipartFile face, Integer topN) {
+    public ResponseEntity<List<FaceInfoBo>> queryTopN(MultipartFile face, Integer topN) throws Seetaface6Exception {
         Assert.notNull(face, "上传人脸照片不能为空");
         List<FaceInfoBo> list = faceInfoService.queryTopN(face, topN);
         return ResponseEntity.ok(list);
